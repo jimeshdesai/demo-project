@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+
+class AppColors {
+  static const Color blackColor = Colors.black;
+  static const Color whiteColor = Colors.white;
+  static const Color appBarColor = Colors.blueGrey;
+  static const Color amberColor = Colors.amber;
+  static const Color blueColor = Colors.blue;
+  static const Color redColor = Colors.red;
+  static const Color greenColor = Colors.green;
+  static const Color mainColor = Color(0xFF9832FF);
+  static const Color cursorColor = Color(0xff111111);
+  static const Color transparent = Colors.transparent;
+  static const Color blueGray = Color(0xff929294);
+  static const Color splashTextColor = Color(0xFF262641);
+  static const Color greyTextColor = Color(0xFF5A5A74);
+  static const Color chatStatusColor = Color(0xFF8E8E8F);
+  static const Color secondTextColor = Color(0xFF767B7A);
+  static const Color textFieldHintColor = Color(0xFFA4A9C9);
+  static const Color textFieldBGColor = Color(0xFFF1F1F7);
+  static const Color textFieldBorderColor = Color(0xFF7F7F7F);
+  static const Color tabBGColor = Color(0xFFDADDEE);
+  static const Color containerBorderColor = Color(0xFFEBEBEB);
+  static const Color amberTextColor = Color(0xFFFF9900);
+  static const Color starColor = Color(0xFFFEC600);
+  static const Color dividerColor = Color(0xFFB5B5B5);
+  static const Color containerColor = Color(0xFFEBEBEB);
+  static const Color restaurantColor = Color(0xffF79E9E);
+  static const Color visitColor = Color(0xffF7E49E);
+  static const Color spaColor = Color(0xff9EF7A7);
+  static const Color showColor = Color(0xff9EE7F7);
+  static const Color faqColor = Color(0xFF5654A2);
+  static const Color cardColor = Color(0xff525c84);
+  static const Color cardColor2 = Color(0xff6179fe);
+  static const Color chatHintTextColor = Color(0xffAEAEAE);
+  static const Color favColor = Color(0xFFFF4BA1);
+  static const Color interestColor = Color(0xFFE8E8E8);
+  static const Color paymentTextColor = Color(0xFF5654A2);
+  static const Color dividerColor2 = Color(0xFFCED3D7);
+  static const Color textColor = Color(0xff22272B);
+}

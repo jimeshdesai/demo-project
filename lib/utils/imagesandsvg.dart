@@ -1,0 +1,7 @@
+class Images {
+
+}
+
+class Svgs {
+
+}
