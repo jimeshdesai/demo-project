@@ -28,27 +28,27 @@ class LocalNotificationService {
     await _notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        List<String> payloadList = details.payload
-                ?.replaceAll('{', '')
-                .replaceAll('}', '')
-                .split(', ') ??
-            [];
+        // List<String> payloadList = details.payload
+        //         ?.replaceAll('{', '')
+        //         .replaceAll('}', '')
+        //         .split(', ') ??
+        //     [];
 
-        // Create a Map from the key-value pairs
-        Map<String, String> payloadMap = {};
-        for (var item in payloadList) {
-          var keyValue = item.split(': ');
-          payloadMap[keyValue[0].trim()] = keyValue[1].trim();
-        }
+        // // Create a Map from the key-value pairs
+        // Map<String, String> payloadMap = {};
+        // for (var item in payloadList) {
+        //   var keyValue = item.split(': ');
+        //   payloadMap[keyValue[0].trim()] = keyValue[1].trim();
+        // }
 
-        // Extract the values from the map and parse integers if necessary
-        List<String> payloadValues = [
-          payloadMap['order_id'] ?? '',
-          payloadMap['status'] ?? '',
-          payloadMap['notificationId'] ?? ''
-        ];
-        Utils.handleNotification(payloadValues[1].toString(),
-            payloadValues[0].toString(), context, payloadValues[2].toString());
+        // // Extract the values from the map and parse integers if necessary
+        // List<String> payloadValues = [
+        //   payloadMap['id'] ?? '',
+        //   payloadMap['status'] ?? '',
+        //   payloadMap['notificationId'] ?? ''
+        // ];
+        // Utils.handleNotification(payloadValues[1].toString(),
+        //     payloadValues[0].toString(), context, payloadValues[2].toString());
       },
     );
   }
