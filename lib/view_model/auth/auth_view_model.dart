@@ -69,8 +69,6 @@ class AuthViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  FindBookingModel? findBookingData;
-
   // login api
   Future<void> loginApi(
       Map<String, Object> data, BuildContext context, bool isBackButton) async {
@@ -91,30 +89,9 @@ class AuthViewModel with ChangeNotifier {
       if (value['success'] == false) {
         Utils.toastMessage(value['message'], true);
       } else {
-        print(value['data']['data']['booking']);
-        print(value['data']['data']['booking'].isEmpty &&
-            value['data']['data']['property'].isEmpty &&
-            value['data']['data']['property_manager'].isEmpty);
-        if (value['data']['data']['booking'].isEmpty &&
-            value['data']['data']['property'].isEmpty &&
-            value['data']['data']['property_manager'].isEmpty) {
-          print('inif');
           Navigator.pushNamedAndRemoveUntil(
               context, RoutesName.findMyBookingScreen, (route) => false,
               arguments: {'isexpired': false});
-        } else {
-          print('inelse');
-          findBookingData = FindBookingModel.fromJson(value['data']);
-          Provider.of<BookingViewModel>(context, listen: false)
-              .storeBookingData(findBookingData);
-          if (isBackButton == false) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              RoutesName.navigation,
-              (route) => false,
-            );
-          }
-        }
         UserModel userModel = UserModel(token: value['token'], isLogin: true);
         userPreference
             .saveUser(userModel, value)
@@ -128,184 +105,6 @@ class AuthViewModel with ChangeNotifier {
       }
     }).onError((error, stackTrace) {
       addLoginLoad(false);
-      Utils.toastMessage(error.toString(), true);
-    });
-    notifyListeners();
-  }
-
-  bool get getForgetLoad => forgetLoad;
-
-  bool forgetLoad = false;
-
-  void addForgetLoad(bool isLoading) {
-    forgetLoad = isLoading;
-    notifyListeners();
-  }
-
-  // forget api
-  void forgetPassApi(
-      Map<String, Object> data, String email, BuildContext context) {
-    if (forgetLoad) {
-      return;
-    }
-    addForgetLoad(true);
-    if (kDebugMode) {
-      print(data);
-    }
-    _api.forgetPassApi(data).then((value) async {
-      addForgetLoad(false);
-      if (kDebugMode) {
-        print(value);
-      }
-      if (value['success'] == false) {
-        Utils.toastMessage(value['message'], true);
-      } else {
-        SharedPreferences sp = await SharedPreferences.getInstance();
-        sp.setString(Constants.email, email);
-        Utils.toastMessage(value['message'], false);
-        Navigator.pushNamed(context, RoutesName.checkMailScreen);
-      }
-    }).onError((error, stackTrace) {
-      addForgetLoad(false);
-      Utils.toastMessage(error.toString(), true);
-    });
-    notifyListeners();
-  }
-
-  bool get getChangeLoad => changeLoad;
-
-  bool changeLoad = false;
-
-  void addChangeLoad(bool isLoading) {
-    changeLoad = isLoading;
-    notifyListeners();
-  }
-
-  // change password api
-  void changePassApi(String password, String confirmPassword,
-      String tempPassword, BuildContext context) async {
-    if (changeLoad) {
-      return;
-    }
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final data = {
-      "email": sp.getString(Constants.email),
-      "password": password,
-      "confirm_password": confirmPassword,
-      "temp_password": tempPassword
-    };
-    addChangeLoad(true);
-    if (kDebugMode) {
-      print(data);
-    }
-    _api.changePassApi(data).then((value) {
-      addChangeLoad(false);
-      if (kDebugMode) {
-        print(value);
-      }
-      if (value['success'] == false) {
-        Utils.toastMessage(value['message'], true);
-      } else {
-        Utils.toastMessage(value['message'], false);
-        Navigator.pushNamed(context, RoutesName.login);
-        sp.remove(Constants.email);
-      }
-    }).onError((error, stackTrace) {
-      addChangeLoad(false);
-      Utils.toastMessage(error.toString(), true);
-    });
-    notifyListeners();
-  }
-
-  bool get getUpdateLoad => updateLoad;
-
-  bool updateLoad = false;
-
-  void addUpdateLoad(bool isLoading) {
-    updateLoad = isLoading;
-    notifyListeners();
-  }
-
-  // update password api
-  void updatePassApi(
-      String password, String confirmPassword, BuildContext context) async {
-    if (updateLoad) {
-      return;
-    }
-    final data = {
-      "password": password,
-      "confirm_password": confirmPassword,
-    };
-    addUpdateLoad(true);
-    if (kDebugMode) {
-      print(data);
-    }
-    _api.updatePassApi(data).then((value) async {
-      addUpdateLoad(false);
-      if (kDebugMode) {
-        print(value);
-      }
-      if (value['success'] == false) {
-        Utils.toastMessage(value['message'], true);
-      } else {
-        SharedPreferences sp = await SharedPreferences.getInstance();
-        sp.setString(Constants.password, confirmPassword);
-        Utils.toastMessage(value['message'], false);
-        Navigator.pop(context);
-      }
-    }).onError((error, stackTrace) {
-      addUpdateLoad(false);
-      Utils.toastMessage(error.toString(), true);
-    });
-    notifyListeners();
-  }
-
-  // social login api
-  Future<void> socialLoginApi(
-      Map<String, dynamic> data, BuildContext context) async {
-    Utils.dialog(context);
-    if (kDebugMode) {
-      print(data);
-    }
-    _api.socialLoginApi(data).then((value) async {
-      Navigator.pop(context);
-      if (kDebugMode) {
-        print(value);
-      }
-      if (value['success'] == false) {
-        Utils.toastMessage(value['message'], true);
-      } else {
-        if (value['data']['data']['booking'].isEmpty &&
-            value['data']['data']['property'].isEmpty &&
-            value['data']['data']['property_manager'].isEmpty) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, RoutesName.findMyBookingScreen, (route) => false,
-              arguments: {'isexpired': false});
-        } else {
-          findBookingData = FindBookingModel.fromJson(value['data']);
-          Provider.of<BookingViewModel>(context, listen: false)
-              .storeBookingData(findBookingData);
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            RoutesName.navigation,
-            (route) => false,
-          );
-        }
-        UserModel userModel = UserModel(token: value['token'], isLogin: true);
-        userPreference
-            .saveUser(userModel, value)
-            .then((value) {})
-            .onError((error, stackTrace) {});
-        SharedPreferences sp = await SharedPreferences.getInstance();
-        if (value['user']['first_name'] != null &&
-            value['user']['last_name'] != null) {
-          sp.setString(Constants.firstname, value['user']['first_name']);
-          sp.setString(Constants.lastname, value['user']['last_name']);
-          sp.setString(Constants.userEmail, value['user']['email']);
-        }
-      }
-    }).onError((error, stackTrace) {
-      Navigator.pop(context);
       Utils.toastMessage(error.toString(), true);
     });
     notifyListeners();

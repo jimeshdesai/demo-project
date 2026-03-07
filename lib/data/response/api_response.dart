@@ -1,4 +1,4 @@
-import 'package:demo-project/data/response/status.dart';
+import 'package:demoproject/data/response/status.dart';
 
 class ApiResponse<T> {
   Status? status;
