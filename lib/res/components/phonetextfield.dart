@@ -34,6 +34,18 @@ class _PhoneTextFieldState extends State<PhoneTextField> {
         leadingPadding: 8.0,
         trailingSpace: false,
       ),
+      validator: (p0) {
+        final message = ValidationCheck.validatePhoneNumber(
+            widget.controller!.text,
+            _regionCode,
+            context
+        );
+        setState(() {
+          _errorMessage = message;
+        });
+        return _errorMessage;
+        //if (widget.onChanged != null) widget.onChanged!(p0.toString());
+      },
       onInputChanged: widget.inputChanged,
       textStyle: TextStyles.poppins(
         fontSize: 18,

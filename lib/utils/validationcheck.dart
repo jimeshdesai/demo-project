@@ -15,11 +15,23 @@ class ValidationCheck {
     return null;
   }
 
-  static String? validateBookingNumber(value, valueEmpty) {
-    if (value!.isEmpty) {
-      return valueEmpty;
+  static String? validatePhoneNumber(String? value, regionCode, context) {
+    if (value == null || value.isEmpty) {
+      return "Phone number is required";
     }
-    return null;
+
+    try {
+      final phoneUtil = PhoneNumberUtil.instance;
+      final phoneNumber = phoneUtil.parse(value, regionCode);
+      final isValid = phoneUtil.isValidNumber(phoneNumber);
+
+      if (!isValid) {
+        return "Incorrect Phone number";
+      }
+      return null;
+    } catch (e) {
+      return 'Invalid Phone number $regionCode';
+    }
   }
 
   static String? validateMobileNumber(value, valueEmpty) {

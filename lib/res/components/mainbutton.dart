@@ -55,3 +55,94 @@ class _MainButtonState extends State<MainButton> {
     );
   }
 }
+
+class CustomButton extends StatelessWidget {
+  final String text;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Widget? iconWidget;
+  final VoidCallback? onPressed;
+  final Color? color;
+  final Color? textColor;
+  final double? width;
+  final double? height;
+  final double? borderRadiusNo;
+  final IconData? icon;
+  final Color? borderButtonColor;
+  final bool isLoading;
+  final Color? disabledBackgroundColor;
+
+  const CustomButton({
+    super.key,
+    this.disabledBackgroundColor,
+    required this.text,
+    this.fontSize,
+    this.fontWeight,
+    this.iconWidget,
+    this.onPressed,
+    this.color,
+    this.textColor,
+    this.width,
+    this.height,
+    this.borderRadiusNo,
+    this.icon,
+    this.borderButtonColor,
+    this.isLoading = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width ?? double.infinity,
+      height: height ?? 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color ?? primaryColor,
+          foregroundColor: textColor ?? whiteColor,
+          splashFactory: NoSplash.splashFactory,
+          disabledForegroundColor: primaryColor,
+          disabledBackgroundColor: disabledBackgroundColor ?? primaryColor,
+          shadowColor: transparent,
+          surfaceTintColor: transparent,
+          overlayColor: transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadiusNo ?? 14),
+            side: borderButtonColor != null
+                ? BorderSide(color: borderButtonColor!)
+                : BorderSide.none,
+          ),
+          elevation: 0,
+        ),
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? Utils.ButtonLoader(whiteColor, 30)
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              Icon(icon, color: textColor ?? Colors.white),
+              const SizedBox(width: 8),
+            ],
+            if (iconWidget != null) ...[iconWidget!],
+            Expanded(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  overflow: TextOverflow.ellipsis,
+                  fontSize: fontSize ?? 18,
+                  fontWeight: fontWeight ?? FontWeight.bold,
+                  color: onPressed == null
+                      ? const Color(0xff2D2E2E)
+                      : textColor ?? Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

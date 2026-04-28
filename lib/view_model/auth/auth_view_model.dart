@@ -312,4 +312,84 @@ class AuthViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> postimage1(
+      BuildContext context,
+      List<File>? urls,
+      String loc,
+      String date,
+      String name,
+      ) async {
+    dialog(context);
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Constant.apicall}api/v1/add/image'),
+      );
+
+      request.fields.addAll({
+        "location": loc,
+        "date": date,
+      });
+
+      // Multiple image upload
+      if (urls != null && urls.isNotEmpty) {
+        for (File file in urls) {
+          request.files.add(
+            await http.MultipartFile.fromBytes(
+              'image', // keep same key if backend expects same field name
+              file.readAsBytesSync(),
+              filename: file.path.split('/').last,
+            ),
+          );
+        }
+        notifyListeners();
+      }
+
+      request.headers.addAll({
+        'authorization': 'Bearer $token',
+      });
+
+      var response = await request.send();
+
+      var responseData = await response.stream.toBytes();
+      var responseString = utf8.decode(responseData);
+      var jsonData = json.decode(responseString);
+
+      Navigator.of(context, rootNavigator: true).pop();
+
+      if (response.statusCode == 200) {
+        print('Profile: $jsonData');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(jsonData['message']),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(jsonData['message']),
+          ),
+        );
+      }
+
+      notifyListeners();
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong'),
+        ),
+      );
+
+      print(e.toString());
+      notifyListeners();
+    }
+  }
 }
