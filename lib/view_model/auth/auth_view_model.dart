@@ -242,4 +242,74 @@ class AuthViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // post images
+
+  Future<void> postimage(BuildContext context, File? url, String loc,
+      String date, String name) async {
+    dialog(context);
+    // StreamController<String?> streamController = StreamController<String?>();
+    // Stream<String?> myStream = streamController.stream;
+    try {
+      var stream =
+      http.ByteStream(url != null ? url.openRead() : const Stream.empty());
+      //print('f: $f');
+      if (url != null) {
+        stream = http.ByteStream(url.openRead());
+        // Rest of the code...
+        notifyListeners();
+      }
+      stream.cast();
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${Constant.apicall}api/v1/add/image'),
+      );
+      request.fields.addAll({"location": loc, "date": date});
+      //var length = await url?.length();
+      notifyListeners();
+      if (url != null) {
+        request.files.add(
+          await http.MultipartFile.fromBytes(
+            'image',
+            File(url.path).readAsBytesSync(),
+            filename: url.path,
+          ),
+        );
+        notifyListeners();
+      }
+      var header = {'authorization': 'Bearer $token'};
+      request.headers.addAll(header);
+      // Send the request
+      var response = await request.send();
+
+      // Read and parse the response
+      var responseData = await response.stream.toBytes();
+      var responseString = utf8.decode(responseData);
+      var jsonData = json.decode(responseString);
+
+      if (response.statusCode == 200) {
+        print('Profile: $jsonData');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(jsonData['message'])),
+        );
+        notifyListeners();
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(jsonData['message'])),
+        );
+        notifyListeners();
+      }
+    } catch (e) {
+      Navigator.of(context, rootNavigator: true).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Something went wrong')),
+      );
+      print(e.toString());
+      notifyListeners();
+    }
+    notifyListeners();
+  }
 }
